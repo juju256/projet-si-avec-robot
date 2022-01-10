@@ -1,34 +1,37 @@
-function run_motor(motor: number) {
+function run_motor (motor: number) {
     let chois: number;
-    maqueen.motorStop(maqueen.Motors.All)
-    basic.pause(200)
-    maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CCW, 100)
-    basic.pause(300)
-    maqueen.motorStop(maqueen.Motors.All)
+let chois2: number;
+if (maqueen.Ultrasonic(PingUnit.Centimeters) <= 10) {
+        maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CCW, 255)
+        basic.pause(300)
+    }
     if (motor == 1) {
         chois = maqueen.Motors.M1
+chois2 = maqueen.Motors.M2
     } else if (motor == 2) {
         chois = maqueen.Motors.M2
+chois2 = maqueen.Motors.M1
     }
-    
     while (maqueen.Ultrasonic(PingUnit.Centimeters) < 45) {
-        maqueen.motorRun(chois, maqueen.Dir.CW, 100)
+        maqueen.motorRun(chois, maqueen.Dir.CW, 255)
+maqueen.motorRun(chois2, maqueen.Dir.CCW, 255)
     }
-    basic.pause(300)
+    basic.pause(0)
 }
-
-basic.forever(function on_forever() {
+basic.forever(function () {
     if (maqueen.Ultrasonic(PingUnit.Centimeters) > 40) {
         maqueen.motorRun(maqueen.Motors.All, maqueen.Dir.CW, 255)
-        basic.showNumber(0)
     } else {
-        basic.showNumber(1)
         if (randint(0, 10) <= 6) {
             run_motor(1)
         } else {
             run_motor(2)
         }
-        
     }
-    
+})
+control.inBackground(function () {
+    music.setVolume(50)
+    while (true) {
+        music.playMelody("F E F A F E F G ", 500)
+    }
 })
